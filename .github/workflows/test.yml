@@ -37,4 +37,9 @@ jobs:
         shell: bash
         env:
           PYTHONDONTWRITEBYTECODE: "1"
-        run: bash hooks/run-python.sh -m unittest discover -s tests -p 'test_*.py' -v
+        run: |
+          export LATEX_TERMINAL_BASH="$(command -v bash)"
+          if command -v cygpath >/dev/null 2>&1; then
+            export LATEX_TERMINAL_BASH="$(cygpath -w "$LATEX_TERMINAL_BASH")"
+          fi
+          bash hooks/run-python.sh -m unittest discover -s tests -p 'test_*.py' -v

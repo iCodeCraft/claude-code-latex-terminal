@@ -1,7 +1,6 @@
 import hashlib
 import json
 import os
-import shutil
 import subprocess
 import tempfile
 import unittest
@@ -13,14 +12,8 @@ HOOK = PLUGIN_ROOT / "hooks" / "message-display.py"
 
 
 def _bash_executable() -> str:
-    """Use Git Bash on Windows instead of the WSL compatibility launcher."""
-    if os.name == "nt":
-        git_path = shutil.which("git")
-        if git_path:
-            git_bash = Path(git_path).parents[1] / "bin" / "bash.exe"
-            if git_bash.is_file():
-                return str(git_bash)
-    return "bash"
+    """Use the exact Bash executable selected by the CI workflow."""
+    return os.environ.get("LATEX_TERMINAL_BASH", "bash")
 
 
 BASH = _bash_executable()
