@@ -262,10 +262,11 @@ class MessageDisplayHookTests(unittest.TestCase):
 
     def test_ignores_malformed_input(self):
         result = subprocess.run(
-            ["bash", str(RUNNER), str(HOOK)],
+            ["bash", "hooks/run-python.sh", str(HOOK)],
             input="not json",
             capture_output=True,
             check=True,
+            cwd=PLUGIN_ROOT,
             env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
             text=True,
         )
@@ -296,10 +297,11 @@ class MessageDisplayHookTests(unittest.TestCase):
             "PYTHONDONTWRITEBYTECODE": "1",
         }
         result = subprocess.run(
-            ["bash", str(RUNNER), str(HOOK)],
+            ["bash", "hooks/run-python.sh", str(HOOK)],
             input=json.dumps(payload),
             capture_output=True,
             check=True,
+            cwd=PLUGIN_ROOT,
             env=environment,
             text=True,
         )

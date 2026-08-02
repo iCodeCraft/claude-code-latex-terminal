@@ -82,7 +82,8 @@ PYTHONDONTWRITEBYTECODE=1 bash hooks/run-python.sh -m unittest discover \
 
 The hook requires Bash and Python 3.8 or newer on `PATH`. It checks `python3`,
 `python`, and the Windows `py -3` launcher in that order. On Windows, use a
-Python installation that is available from Git Bash.
+Python installation that is available from Git Bash; Git Bash provides the
+required Bash runtime and path conversion.
 
 The hook does not make network requests. It stores only temporary parser state
 under `CLAUDE_PLUGIN_DATA` while a message is streaming and removes that state
