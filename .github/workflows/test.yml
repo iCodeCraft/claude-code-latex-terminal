@@ -1,0 +1,40 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7.0.1
+
+      - name: Validate shell syntax
+        shell: bash
+        run: bash -n hooks/run-python.sh
+
+      - name: Validate JSON files
+        shell: bash
+        run: |
+          bash hooks/run-python.sh -m json.tool .claude-plugin/plugin.json >/dev/null
+          bash hooks/run-python.sh -m json.tool hooks/hooks.json >/dev/null
+
+      - name: Run tests
+        shell: bash
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: bash hooks/run-python.sh -m unittest discover -s tests -p 'test_*.py' -v

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "latex-terminal",
+  "displayName": "LaTeX Terminal",
+  "version": "0.1.0",
+  "description": "Preserves Markdown-sensitive LaTeX escapes in Claude Code terminal output.",
+  "author": {
+    "name": "Imran Gadzhiev",
+    "email": "i.gadzhiev.m@gmail.com",
+    "url": "https://github.com/iCodeCraft"
+  },
+  "homepage": "https://github.com/iCodeCraft/claude-code-latex-terminal#readme",
+  "repository": "https://github.com/iCodeCraft/claude-code-latex-terminal",
+  "license": "Apache-2.0",
+  "keywords": ["latex", "math", "terminal", "markdown", "message-display"]
+}
