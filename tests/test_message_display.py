@@ -296,13 +296,20 @@ class MessageDisplayHookTests(unittest.TestCase):
             "CLAUDE_PLUGIN_DATA": data_dir,
             "PYTHONDONTWRITEBYTECODE": "1",
         }
-        result = subprocess.run(
-            ["bash", "hooks/run-python.sh", str(HOOK)],
-            input=json.dumps(payload),
-            capture_output=True,
-            check=True,
-            cwd=PLUGIN_ROOT,
-            env=environment,
-            text=True,
-        )
+        try:
+            result = subprocess.run(
+                ["bash", "hooks/run-python.sh", str(HOOK)],
+                input=json.dumps(payload),
+                capture_output=True,
+                check=True,
+                cwd=PLUGIN_ROOT,
+                env=environment,
+                text=True,
+            )
+        except subprocess.CalledProcessError as error:
+            self.fail(
+                "Hook command failed.\n"
+                f"stdout:\n{error.stdout}\n"
+                f"stderr:\n{error.stderr}"
+            )
         return json.loads(result.stdout) if result.stdout else None
