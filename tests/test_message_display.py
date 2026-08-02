@@ -1,6 +1,7 @@
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -9,7 +10,20 @@ from pathlib import Path
 
 PLUGIN_ROOT = Path(__file__).parents[1]
 HOOK = PLUGIN_ROOT / "hooks" / "message-display.py"
-RUNNER = PLUGIN_ROOT / "hooks" / "run-python.sh"
+
+
+def _bash_executable() -> str:
+    """Use Git Bash on Windows instead of the WSL compatibility launcher."""
+    if os.name == "nt":
+        git_path = shutil.which("git")
+        if git_path:
+            git_bash = Path(git_path).parents[1] / "bin" / "bash.exe"
+            if git_bash.is_file():
+                return str(git_bash)
+    return "bash"
+
+
+BASH = _bash_executable()
 
 
 class MessageDisplayHookTests(unittest.TestCase):
@@ -262,7 +276,7 @@ class MessageDisplayHookTests(unittest.TestCase):
 
     def test_ignores_malformed_input(self):
         result = subprocess.run(
-            ["bash", "hooks/run-python.sh", str(HOOK)],
+            [BASH, "hooks/run-python.sh", str(HOOK)],
             input="not json",
             capture_output=True,
             check=True,
@@ -298,7 +312,7 @@ class MessageDisplayHookTests(unittest.TestCase):
         }
         try:
             result = subprocess.run(
-                ["bash", "hooks/run-python.sh", str(HOOK)],
+                [BASH, "hooks/run-python.sh", str(HOOK)],
                 input=json.dumps(payload),
                 capture_output=True,
                 check=True,
